@@ -1,101 +1,255 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState } from 'react'
+import { Dumbbell } from 'lucide-react'
+import { analyzeAdvancedFeedback } from './actions'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
+import { PerformanceChart } from '../components/performance-chart'
+import { Recommendations } from '../components/recommendations'
+import { TrainingPlan } from '../components/training-plan'
+import { NutritionAdvice } from '../components/nutrition-advice'
+import { InjuryPrevention } from '../components/injury-prevention'
+import { MentalPreparation } from '../components/mental-preparation'
+import { RecoveryTechniques } from '../components/recovery-techniques'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+export default function AdvancedFeedbackPage() {
+  const [sport, setSport] = useState<string>('')
+  const [skillLevel, setSkillLevel] = useState<string>('')
+  const [frequency, setFrequency] = useState<string>('')
+  const [age, setAge] = useState<string>('')
+  const [fitnessLevel, setFitnessLevel] = useState<string>('')
+  const [loading, setLoading] = useState(false)
+  const [analysis, setAnalysis] = useState<any>(null)
+  const [error, setError] = useState<string>('')
+
+  async function handleSubmit(formData: FormData) {
+    setLoading(true)
+    setError('')
+    setAnalysis(null)
+    console.log('Submitting form data:', Object.fromEntries(formData))
+    const result = await analyzeAdvancedFeedback(formData)
+    console.log('Received result:', result)
+    if (result.success && result.analysis) {
+      setAnalysis(result.analysis)
+    } else {
+      setError(result.error || 'An error occurred during analysis. Please try again.')
+    }
+    setLoading(false)
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gray-50 py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <Dumbbell className="h-12 w-12 text-primary" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900">Advanced Sports Analysis</h1>
+          <p className="mt-2 text-gray-600">
+            Get comprehensive feedback and personalized training recommendations
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <Card className="lg:sticky lg:top-4 lg:self-start">
+            <CardHeader>
+              <CardTitle>Submit Your Feedback</CardTitle>
+              <CardDescription>
+                Provide detailed information about your sports experience
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form 
+              onSubmit={(e) => {
+                e.preventDefault()
+                const formData = new FormData(e.currentTarget)
+                handleSubmit(formData)
+              }}
+              className="space-y-6"
+              >
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="sport">Sport</Label>
+                    <Select name="sport" value={sport} onValueChange={setSport} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a sport" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="basketball">Basketball</SelectItem>
+                        <SelectItem value="football">Football</SelectItem>
+                        <SelectItem value="soccer">Soccer</SelectItem>
+                        <SelectItem value="tennis">Tennis</SelectItem>
+                        <SelectItem value="swimming">Swimming</SelectItem>
+                        <SelectItem value="running">Running</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="skillLevel">Skill Level</Label>
+                    <Select name="skillLevel" value={skillLevel} onValueChange={setSkillLevel} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="beginner">Beginner</SelectItem>
+                        <SelectItem value="intermediate">Intermediate</SelectItem>
+                        <SelectItem value="advanced">Advanced</SelectItem>
+                        <SelectItem value="professional">Professional</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="frequency">Training Frequency</Label>
+                    <Select name="frequency" value={frequency} onValueChange={setFrequency} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select frequency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1-2">1-2 times/week</SelectItem>
+                        <SelectItem value="3-4">3-4 times/week</SelectItem>
+                        <SelectItem value="5+">5+ times/week</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="age">Age</Label>
+                    <Input
+                      type="number"
+                      id="age"
+                      name="age"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                      placeholder="Enter your age"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="fitnessLevel">Fitness Level</Label>
+                    <Select name="fitnessLevel" value={fitnessLevel} onValueChange={setFitnessLevel} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select fitness level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="beginner">Beginner</SelectItem>
+                        <SelectItem value="intermediate">Intermediate</SelectItem>
+                        <SelectItem value="advanced">Advanced</SelectItem>
+                        <SelectItem value="elite">Elite</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="goals">Your Goals</Label>
+                  <Textarea
+                    id="goals"
+                    name="goals"
+                    placeholder="What are your specific goals? (e.g., improve endurance, increase strength)"
+                    className="h-24"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="feedback">Detailed Feedback</Label>
+                  <Textarea
+                    id="feedback"
+                    name="feedback"
+                    placeholder="Describe your current performance, challenges, and areas you want to improve..."
+                    className="h-32"
+                    required
+                  />
+                </div>
+
+                <Button type="submit" className="w-full py-2 px-4 text-sm sm:text-base" disabled={loading}>
+                  {loading ? 'Analyzing...' : 'Submit for Advanced Analysis'}
+                </Button>
+
+                {error && (
+                  <div className="bg-red-50 border-l-4 border-red-400 p-3 sm:p-4 mt-4 text-sm">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm text-red-700">
+                          {error}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </form>
+            </CardContent>
+          </Card>
+
+          {analysis && (
+            <div className="space-y-6">
+              <Tabs defaultValue="summary" className="w-full">
+                <TabsList className="grid w-full grid-cols-5 sm:grid-cols-3 lg:grid-cols-5 mb-4">
+                  <TabsTrigger value="summary">Summary</TabsTrigger>
+                  <TabsTrigger value="metrics">Metrics</TabsTrigger>
+                  <TabsTrigger value="plan">Plan</TabsTrigger>
+                  <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
+                  <TabsTrigger value="extras">Extras</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="summary">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Analysis Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="prose prose-sm">
+                        <p>{analysis.summary}</p>
+                        <h4 className="mt-4 font-semibold">Technical Analysis</h4>
+                        <p>{analysis.technicalAnalysis}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="metrics">
+                  <PerformanceChart metrics={analysis.performanceMetrics} />
+                </TabsContent>
+
+                <TabsContent value="plan">
+                  <div className="space-y-6">
+                    <Recommendations recommendations={analysis.recommendations} />
+                    <TrainingPlan plan={analysis.trainingPlan} />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="nutrition">
+                  <NutritionAdvice advice={analysis.nutritionAdvice} />
+                </TabsContent>
+
+                <TabsContent value="extras">
+                  <div className="space-y-6">
+                    <InjuryPrevention tips={analysis.injuryPreventionTips} />
+                    <MentalPreparation strategies={analysis.mentalPreparationStrategies} />
+                    <RecoveryTechniques techniques={analysis.recoveryTechniques} />
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
-  );
+  )
 }
+
