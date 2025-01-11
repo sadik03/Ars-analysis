@@ -148,14 +148,10 @@ export async function analyzeAdvancedFeedback(formData: FormData): Promise<{
         throw new Error('No valid JSON found in the response');
       }
     } catch (parseError) {
-      console.error('Error parsing JSON:', parseError);
-    
-      if (parseError instanceof Error) {
-        throw new Error(`Failed to parse AI response: ${parseError.message}`);
-      }
-    
-      throw new Error('Failed to parse AI response: Unknown error');
+      console.error('Raw Response:', text);
+      throw parseError;
     }
+    
 
     return { success: true, analysis };
   } catch (error) {
