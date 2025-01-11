@@ -50,9 +50,9 @@ export default function AdvancedFeedbackPage() {
           <div className="flex justify-center mb-4">
             <Dumbbell className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Advanced Sports Analysis</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Ars kreedashala Sports Analysis</h1>
           <p className="mt-2 text-gray-600">
-            Get comprehensive feedback and personalized training recommendations
+            
           </p>
         </div>
 
