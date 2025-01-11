@@ -28,20 +28,21 @@ export default function AdvancedFeedbackPage() {
   const [analysis, setAnalysis] = useState<any>(null)
   const [error, setError] = useState<string>('')
 
-  async function handleSubmit(formData: FormData) {
-    setLoading(true)
-    setError('')
-    setAnalysis(null)
-    console.log('Submitting form data:', Object.fromEntries(formData))
-    const result = await analyzeAdvancedFeedback(formData)
-    console.log('Received result:', result)
+  const handleSubmit = async (formData) => {
+    setLoading(true);
+    setError('');
+    setAnalysis(null);
+    console.log('Submitting form data:', Object.fromEntries(formData));
+    const result = await analyzeAdvancedFeedback(formData);
+    console.log('Received result:', result);
     if (result.success && result.analysis) {
-      setAnalysis(result.analysis)
+      setAnalysis(result.analysis);
     } else {
-      setError(result.error || 'An error occurred during analysis. Please try again.')
+      setError(result.error || 'An error occurred during analysis. Please try again.');
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
