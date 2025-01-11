@@ -1,8 +1,8 @@
 'use server'
 
 import { GoogleGenerativeAI } from '@google/generative-ai'
-// import "../.env"
-const GEMINI_API_KEY = "AIzaSyBRVG5XquVDTSIKYBm4iP0F2cENGrWkyao";
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 if (!GEMINI_API_KEY) {
   throw new Error('GEMINI_API_KEY is not set in the environment variables');
@@ -129,16 +129,16 @@ export async function analyzeAdvancedFeedback(formData: FormData): Promise<{
       "recoveryTechniques": ["...", "..."]
     }`
 
-    console.log('Sending prompt to Gemini API');
+    // console.log('Sending prompt to Gemini API');
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
     const result = await model.generateContent(prompt);
     const response = result.response;
     const text = response.text();
 
-    console.log('Received response from Gemini API');
-    console.log('Raw AI response:', text);
+    // console.log('Received response from Gemini API');
+    // console.log('Raw AI response:', text);
 
-    console.log('Attempting to parse JSON response');
+    // console.log('Attempting to parse JSON response');
     let analysis: AdvancedAnalysisResult;
     try {
       const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -159,7 +159,7 @@ export async function analyzeAdvancedFeedback(formData: FormData): Promise<{
 
     return { success: true, analysis };
   } catch (error) {
-    console.error('Error analyzing feedback:', error);
+    // console.error('Error analyzing feedback:', error);
     let errorMessage = 'An unknown error occurred while analyzing your feedback.';
     if (error instanceof Error) {
       errorMessage = `Error: ${error.message}`;
