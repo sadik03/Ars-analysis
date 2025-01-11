@@ -129,16 +129,11 @@ export async function analyzeAdvancedFeedback(formData: FormData): Promise<{
       "recoveryTechniques": ["...", "..."]
     }`
 
-    // console.log('Sending prompt to Gemini API');
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
     const result = await model.generateContent(prompt);
     const response = result.response;
     const text = response.text();
 
-    // console.log('Received response from Gemini API');
-    // console.log('Raw AI response:', text);
-
-    // console.log('Attempting to parse JSON response');
     let analysis: AdvancedAnalysisResult;
     try {
       const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -148,22 +143,18 @@ export async function analyzeAdvancedFeedback(formData: FormData): Promise<{
         throw new Error('No valid JSON found in the response');
       }
     } catch (parseError) {
+      console.error('Error parsing JSON:', parseError);
       console.error('Raw Response:', text);
-      throw parseError;
+      throw new Error('Failed to parse AI response');
     }
-    
 
     return { success: true, analysis };
   } catch (error) {
-    // console.error('Error analyzing feedback:', error);
     let errorMessage = 'An unknown error occurred while analyzing your feedback.';
     if (error instanceof Error) {
       errorMessage = `Error: ${error.message}`;
     }
-    return { 
-      success: false, 
-      error: errorMessage
-    };
+    console.error(errorMessage);
+    return { success: false, error: errorMessage };
   }
 }
-
