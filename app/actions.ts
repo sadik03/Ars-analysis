@@ -1,8 +1,8 @@
 'use server'
 
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import "../.env"
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+// import "../.env"
+const GEMINI_API_KEY = "AIzaSyBRVG5XquVDTSIKYBm4iP0F2cENGrWkyao";
 
 if (!GEMINI_API_KEY) {
   throw new Error('GEMINI_API_KEY is not set in the environment variables');
@@ -149,13 +149,12 @@ export async function analyzeAdvancedFeedback(formData: FormData): Promise<{
       }
     } catch (parseError) {
       console.error('Error parsing JSON:', parseError);
-      throw new Error(`Failed to parse AI response: ${parseError.message}`);
-    }
-    console.log('Successfully parsed JSON response');
-
-    if (!analysis.summary || !analysis.technicalAnalysis || !analysis.performanceMetrics) {
-      console.error('Invalid analysis structure:', analysis);
-      throw new Error('Invalid analysis structure: missing required fields');
+    
+      if (parseError instanceof Error) {
+        throw new Error(`Failed to parse AI response: ${parseError.message}`);
+      }
+    
+      throw new Error('Failed to parse AI response: Unknown error');
     }
 
     return { success: true, analysis };

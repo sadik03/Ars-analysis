@@ -28,21 +28,20 @@ export default function AdvancedFeedbackPage() {
   const [analysis, setAnalysis] = useState<any>(null)
   const [error, setError] = useState<string>('')
 
-  const handleSubmit = async (formData) => {
-    setLoading(true);
-    setError('');
-    setAnalysis(null);
-    console.log('Submitting form data:', Object.fromEntries(formData));
-    const result = await analyzeAdvancedFeedback(formData);
-    console.log('Received result:', result);
+  async function handleSubmit(formData: FormData) {
+    setLoading(true)
+    setError('')
+    setAnalysis(null)
+    console.log('Submitting form data:', Object.fromEntries(formData))
+    const result = await analyzeAdvancedFeedback(formData)
+    console.log('Received result:', result)
     if (result.success && result.analysis) {
-      setAnalysis(result.analysis);
+      setAnalysis(result.analysis)
     } else {
-      setError(result.error || 'An error occurred during analysis. Please try again.');
+      setError(result.error || 'An error occurred during analysis. Please try again.')
     }
-    setLoading(false);
-  };
-  
+    setLoading(false)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
@@ -51,9 +50,9 @@ export default function AdvancedFeedbackPage() {
           <div className="flex justify-center mb-4">
             <Dumbbell className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Advanced Sports Analysis</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Ars kreedashala Sports Analysis</h1>
           <p className="mt-2 text-gray-600">
-            Get comprehensive feedback and personalized training recommendations
+            
           </p>
         </div>
 
@@ -66,7 +65,14 @@ export default function AdvancedFeedbackPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form action={handleSubmit} className="space-y-6">
+              <form 
+              onSubmit={(e) => {
+                e.preventDefault()
+                const formData = new FormData(e.currentTarget)
+                handleSubmit(formData)
+              }}
+              className="space-y-6"
+              >
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="sport">Sport</Label>
@@ -193,7 +199,7 @@ export default function AdvancedFeedbackPage() {
           {analysis && (
             <div className="space-y-6">
               <Tabs defaultValue="summary" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 mb-4">
+                <TabsList className="grid w-full grid-cols-5 sm:grid-cols-3 lg:grid-cols-5 mb-4">
                   <TabsTrigger value="summary">Summary</TabsTrigger>
                   <TabsTrigger value="metrics">Metrics</TabsTrigger>
                   <TabsTrigger value="plan">Plan</TabsTrigger>
